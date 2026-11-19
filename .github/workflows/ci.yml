@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version-file: test/go.mod
+          cache-dependency-path: test/go.sum
+      - name: Lint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua-check
+          luacheck wormhole.lua
+      - name: Test
+        working-directory: test
+        run: go test ./...

@@ -52,6 +52,14 @@ cliamp plugins trust wormhole
 
 cliamp loads plugins at start and asks for the trust step again after each edit. Errors go to `~/.config/cliamp/plugins.log`.
 
+The tests run the plugin in the Lua VM that cliamp uses, with stand-ins for cliamp:
+
+```sh
+cd test && go test ./...
+```
+
+After a change that is meant to alter the picture, `go test -update` records the frames in `test/testdata/frames.txt` again.
+
 ## License
 
 MIT
