@@ -12,7 +12,7 @@ Rings leave the mouth in the middle and grow past the edges. With a steady beat 
 cliamp plugins install konstantindenerz/cliamp-plugin-wormhole
 ```
 
-Start cliamp and press `v` until you reach `wormhole`, or pick it with `Ctrl+V`. Press `V` for full screen. To start with it, set `visualizer = "wormhole"` in `config.toml`.
+Start cliamp and press `v` until you reach `Wormhole`, or pick it with `Ctrl+V`. Press `V` for full screen. To start with it, set `visualizer = "Wormhole"` in `config.toml`.
 
 ```sh
 cliamp plugins remove wormhole

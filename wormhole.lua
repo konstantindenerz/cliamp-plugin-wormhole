@@ -3,9 +3,9 @@
 -- Kick, snare and hi-hat each set off an effect.
 
 local p = plugin.register({
-    name = "wormhole",
+    name = "Wormhole",
     type = "visualizer",
-    version = "1.0.0",
+    version = "1.0.1",
     description = "Wireframe tunnel that flies one ring per beat",
 })
 
