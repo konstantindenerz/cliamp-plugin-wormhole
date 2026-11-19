@@ -20,7 +20,7 @@ cliamp plugins remove wormhole
 
 ## Configuration
 
-All keys are optional. They go into `~/.config/cliamp/config.toml`:
+The plugin needs no configuration. These keys are optional and go into `~/.config/cliamp/config.toml`; the values below are the defaults:
 
 ```toml
 [plugins.wormhole]
