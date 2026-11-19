@@ -11,6 +11,7 @@ local p = plugin.register({
 
 local abs, floor, max, min = math.abs, math.floor, math.max, math.min
 local sin, cos, acos, exp, pi = math.sin, math.cos, math.acos, math.exp, math.pi
+
 local BANDS = 10
 
 -- The tunnel moves in steps of TICK seconds, however often cliamp draws.
@@ -218,7 +219,8 @@ do
     local HIT_TYPICAL = 0.6
     -- Snare: rock the wall, alternating sides.
     local ROCK = 0.1
-    -- Hi-hat: sparks in the top third of the wall, where the rings show the treble.
+    -- Hi-hat: sparks in the top third of the wall, where the rings show the
+    -- treble.
     local SPARK_HIT = 6
     local SPARK_NEAR = 0.2
     local SPARK_FAR = 0.5
@@ -256,8 +258,6 @@ do
         return loud
     end
 
-    local sorted = {}
-
     local function kick(strength)
         local wave = s.waves[s.nextWave]
         wave.at, wave.strength = s.clock, strength
@@ -283,12 +283,12 @@ do
         end
         s.gaps[s.counted % GAPS + 1] = gap
         s.counted = s.counted + 1
-        local n = min(s.counted, GAPS)
-        for i = 1, n do
+        local sorted = {}
+        for i = 1, min(s.counted, GAPS) do
             sorted[i] = s.gaps[i]
         end
         table.sort(sorted)
-        s.beat = sorted[floor(n / 2) + 1]
+        s.beat = sorted[floor(#sorted / 2) + 1]
     end
 
     -- strike throws sparks at the top of the wall, where the rings show the
@@ -681,9 +681,11 @@ do
         local sine, cosine = sin(a + spiral / z), cos(a + spiral / z)
         local n = (z - 1 + travel) * RINGS
         local nth = floor(n)
-        local loud = bulge(ring_levels(nth), ring_levels(nth + 1), n - nth, acos(sine) / pi * (BANDS - 1))
+        local u = acos(sine) / pi * (BANDS - 1)
+        local loud = bulge(ring_levels(nth), ring_levels(nth + 1), n - nth, u)
         local grow = scale * outline(a) * (1 + SPECTRAL * loud) / z
-        return halfW * (1 + bendX * z * z) + rx * cosine * grow, halfH * (1 + bendY * z * z) + ry * sine * grow
+        local x = halfW * (1 + bendX * z * z) + rx * cosine * grow
+        return x, halfH * (1 + bendY * z * z) + ry * sine * grow
     end
 
     -- streak draws a line whose first third is tier head and the rest tier tail.
@@ -704,7 +706,8 @@ do
     -- few dots smear back towards the mouth.
     local function ring(z, shown, tier)
         local scale = 1 + swell(z)
-        local points = max(8, floor((floor(2 * pi * max(rx, ry) * scale * (1 + SPECTRAL) / z) + 8) / coarse))
+        local points = floor(2 * pi * max(rx, ry) * scale * (1 + SPECTRAL) / z) + 8
+        points = max(8, floor(points / coarse))
         local smears = warp > WARP_SHOWN
         local smear = 1 / max(INNER, 1 / z - WARP_SMEAR * warp)
         local every = max(1, floor(points / 16))
@@ -755,8 +758,8 @@ do
 
     -- aim sets up the projection of the frame.
     local function aim()
-        travel, twist, rock, spiral, warp, born = s.travel, s.twist, s.rock, s.spiral, s.warp, s.born
-        glow, shapes = s.glow, s.shapes
+        travel, twist, rock, spiral = s.travel, s.twist, s.rock, s.spiral
+        warp, born, glow, shapes = s.warp, s.born, s.glow, s.shapes
         halfW, halfH = w / 2, h / 2
         local tunnelH = max(halfH, FLAT * halfW)
         -- At least 5 dots, or the far rings merge in short panels.
