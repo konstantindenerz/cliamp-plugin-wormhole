@@ -2,6 +2,8 @@
 
 A wireframe tunnel visualizer for [cliamp](https://github.com/bjarneo/cliamp), drawn in Braille dots.
 
+![The tunnel in full screen](assets/demo.gif)
+
 Rings leave the mouth in the middle and grow past the edges. With a steady beat one ring leaves per kick; without one the tunnel cruises. A kick sends a shock wave down the tunnel, a snare rocks the wall, a hi-hat throws sparks, and a sudden jump in energy starts a short warp. The wall bulges where the music was loud, bass at the bottom and treble at the top, and its cross-section moves between circle, hexagon, square and star with the tone of the track.
 
 ## Install
