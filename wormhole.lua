@@ -33,15 +33,17 @@ local DIM, TEXT, BEAT, HOT = 1, 2, 3, 4
 
 local RESET = "\27[0m"
 
--- A color is a palette index (0-255) or "#rrggbb". The defaults are the
--- terminal's own gray, white, yellow and red.
+-- A color is a palette index (0-255) or "#rrggbb", and the # may be left
+-- out. The defaults are the terminal's own gray, white, yellow and red.
 local function sgr(value, fallback)
-    local hex = value and value:match("^%s*#(%x%x%x%x%x%x)")
+    -- The space ends a value that has nothing after it.
+    value = (value or "") .. " "
+    local hex = value:match("^%s*#?(%x%x%x%x%x%x)%X")
     if hex then
         return string.format("\27[38;2;%d;%d;%dm",
             tonumber(hex:sub(1, 2), 16), tonumber(hex:sub(3, 4), 16), tonumber(hex:sub(5, 6), 16))
     end
-    local n = tonumber(value and value:match("^%s*(%d+)") or "") or fallback
+    local n = tonumber(value:match("^%s*(%d+)%X") or "") or fallback
     if n < 8 then
         return "\27[" .. (30 + n) .. "m"
     elseif n < 16 then

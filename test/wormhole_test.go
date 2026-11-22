@@ -429,6 +429,7 @@ func TestConfig(t *testing.T) {
 		{"defaults", nil, "\x1b[37m"},
 		{"index", map[string]string{"dim": "8", "text": "15", "beat": "200", "hot": "1"}, "\x1b[90m"},
 		{"hex", map[string]string{"dim": "#102030"}, "\x1b[38;2;16;32;48m"},
+		{"hex without #", map[string]string{"dim": "102030"}, "\x1b[38;2;16;32;48m"},
 		{"comment after the value", map[string]string{"dim": "244  # gray", "delay_ms": "100 # ms"}, "\x1b[38;5;244m"},
 		{"junk", map[string]string{"dim": "abc", "text": "#12", "beat": "-5", "hot": "", "delay_ms": "x"}, "\x1b[37m"},
 		{"too big", map[string]string{"dim": "70000", "delay_ms": "99999999999"}, "\x1b[38;5;255m"},

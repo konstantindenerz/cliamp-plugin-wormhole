@@ -26,7 +26,7 @@ The plugin needs no configuration. These keys are optional and go into `~/.confi
 [plugins.wormhole]
 # Wait this long before the tunnel reacts, when it is ahead of the sound.
 delay_ms = 0
-# Colors: a palette index (0-255) or "#rrggbb".
+# Colors: a palette index (0-255) or "#rrggbb", the # may be left out.
 # Wall and far rings, near rings, kick waves, hard hits.
 dim = 7
 text = 15
