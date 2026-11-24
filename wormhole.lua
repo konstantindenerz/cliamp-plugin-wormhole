@@ -5,7 +5,7 @@
 local p = plugin.register({
     name = "Wormhole",
     type = "visualizer",
-    version = "1.0.2",
+    version = "1.1.0",
     description = "Wireframe tunnel that flies one ring per beat",
 })
 
