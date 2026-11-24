@@ -430,9 +430,9 @@ func TestConfig(t *testing.T) {
 		{"index", map[string]string{"dim": "8", "text": "15", "beat": "200", "hot": "1"}, "\x1b[90m"},
 		{"hex", map[string]string{"dim": "#102030"}, "\x1b[38;2;16;32;48m"},
 		{"hex without #", map[string]string{"dim": "102030"}, "\x1b[38;2;16;32;48m"},
-		{"comment after the value", map[string]string{"dim": "244  # gray", "delay_ms": "100 # ms"}, "\x1b[38;5;244m"},
-		{"junk", map[string]string{"dim": "abc", "text": "#12", "beat": "-5", "hot": "", "delay_ms": "x"}, "\x1b[37m"},
-		{"too big", map[string]string{"dim": "70000", "delay_ms": "99999999999"}, "\x1b[38;5;255m"},
+		{"comment after the value", map[string]string{"dim": "244  # gray"}, "\x1b[38;5;244m"},
+		{"junk", map[string]string{"dim": "abc", "text": "#12", "beat": "-5", "hot": ""}, "\x1b[37m"},
+		{"too big", map[string]string{"dim": "70000", "text": "99999999999"}, "\x1b[38;5;255m"},
 		{"escape codes", map[string]string{"dim": "7\x1b]0;x\x07", "text": "#ffffff\x1b[2J"}, "\x1b[37m"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -446,24 +446,6 @@ func TestConfig(t *testing.T) {
 			}
 			checkFrame(t, out, 7, 76)
 		})
-	}
-}
-
-// delay_ms holds the bands back, so a kick shows that much later.
-func TestDelay(t *testing.T) {
-	firstKick := func(config map[string]string) float64 {
-		h := load(t, config)
-		for i := range 200 {
-			h.tick(music(128, float64(i)*tick, 1), 7, 76, tick)
-			if h.tunnel().lastKick > 0 {
-				return h.clock
-			}
-		}
-		t.Fatal("no kick")
-		return 0
-	}
-	if now, late := firstKick(nil), firstKick(map[string]string{"delay_ms": "200"}); math.Abs(late-now-0.2) > 1e-9 {
-		t.Fatalf("the first kick shows at %.2f s, with a delay of 200 ms at %.2f s", now, late)
 	}
 }
 

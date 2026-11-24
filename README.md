@@ -24,8 +24,6 @@ The plugin needs no configuration. These keys are optional and go into `~/.confi
 
 ```toml
 [plugins.wormhole]
-# Wait this long before the tunnel reacts, when it is ahead of the sound.
-delay_ms = 0
 # Colors: a palette index (0-255) or "#rrggbb", the # may be left out.
 # Wall and far rings, near rings, kick waves, hard hits.
 dim = 7
@@ -38,7 +36,7 @@ The default colors are the gray, white, yellow and red of your terminal, so the 
 
 ## Notes
 
-- The beat sync needs a cliamp that gives plugins the sound as it plays ([bjarneo/cliamp#738](https://github.com/bjarneo/cliamp/pull/738)). Up to v2.4.1 a plugin gets the audio in bursts and ahead of the sound: the tunnel flies, but it misses kicks and rarely locks to the beat. `delay_ms = 175` lines up the kicks it does catch.
+- The beat sync needs a cliamp with [bjarneo/cliamp#738](https://github.com/bjarneo/cliamp/pull/738), which gives plugins the sound as it plays. Without it a plugin gets the audio in bursts and ahead of the sound: the tunnel flies, but it misses kicks and rarely locks to the beat.
 - The terminal font needs the Braille block (U+2800 to U+28FF).
 - cliamp gives a plugin 50 ms for a frame. A full-screen frame at 140x40 takes about a third of that on an Apple M-series CPU. On a very large terminal the plugin sets fewer dots per ring to stay in time.
 - While playback is paused the tunnel eases to a stop. Silence stops it too.

@@ -65,11 +65,6 @@ local COLOR = {
     [HOT] = sgr(conf("hot"), 9),
 }
 
--- cliamp hands a plugin the sound a little before it is heard. The tunnel
--- waits this long, in ticks, so a kick shows when it sounds.
-local DELAY = tonumber((conf("delay_ms") or ""):match("^%s*(%d+)") or "") or 0
-DELAY = min(40, floor(DELAY / (TICK * 1000) + 0.5))
-
 -- State -----------------------------------------------------------------
 
 local s
@@ -127,9 +122,6 @@ local function reset()
         waves = {},
         sparks = {},
         shapes = {}, -- the glow each ring had at the mouth
-        heldBands = {}, -- the bands of the last DELAY ticks
-        held = 0,
-        lateBands = filled(BANDS, 0),
         lastBands = filled(BANDS, 0), -- the bands of the frame before
         midBands = filled(BANDS, 0),
         -- Kick, snare, hi-hat: a sudden rise across a share of the bands,
@@ -152,9 +144,6 @@ local function reset()
     end
     for i = 0, SHAPES - 1 do
         s.shapes[i] = filled(BANDS, 0)
-    end
-    for i = 1, DELAY do
-        s.heldBands[i] = filled(BANDS, 0)
     end
 end
 
@@ -431,19 +420,6 @@ do
         end
     end
 
-    -- delayed swaps the bands for the ones from DELAY ticks ago.
-    local function delayed(bands)
-        if DELAY == 0 then
-            return bands
-        end
-        s.held = s.held % DELAY + 1
-        local slot, late = s.heldBands[s.held], s.lateBands
-        for i = 1, BANDS do
-            late[i], slot[i] = slot[i], bands[i]
-        end
-        return late
-    end
-
     -- cliamp eases the bands and hands over where they are at the end of a
     -- frame. between gives them part of the way through it: the ease is faster
     -- up than down. after is the share of the frame gone by, span its length in s.
@@ -462,7 +438,6 @@ do
 
     -- step is one tick of playback.
     local function step(bands)
-        bands = delayed(bands)
         s.loud = s.loud + (levels(bands) - s.loud) * K_LOUD
         s.clock = s.clock + TICK
         if not s.playing then
